@@ -20,6 +20,20 @@ To run the container and bind the port 1935 to the host machine; run the followi
 docker run -p 1935:1935 -p 8080:8080 jasonrivers/nginx-rtmp
 ```
 
+### build Images
+
+1. Build RTMP IMAGE
+
+```
+docker build  -t bishoyabdo/nginx-rtmp .
+
+```
+2. HLS IMAGE
+
+```
+docker build -f Dockerfile-hls -t bishoyabdo/nginx-hls .
+
+```
 ### Multiple Streams:
 You can enable multiple streams on the container by setting RTMP_STREAM_NAMES when launching, This is a comma seperated list of names, E.G.
 ```
@@ -27,7 +41,7 @@ docker run      \
     -p 1935:1935        \
     -p 8080:8080        \
     -e RTMP_STREAM_NAMES=live,teststream1,teststream2   \
-    jasonrivers/nginx-rtmp
+    bishoyabdo/nginx-hls
 ```
 
 ### Pushing streams
@@ -37,7 +51,7 @@ docker run      \
     -p 1935:1935        \
     -p 8080:8080        \
     -e RTMP_PUSH_URLS=rtmp://live.youtube.com/myname/streamkey,rtmp://live.twitch.tv/app/streamkey
-    jasonrivers/nginx-rtmp
+    bishoyabdo/nginx-hls
 ```
 
 ## OBS Configuration
@@ -48,6 +62,20 @@ Server: rtmp://<your server ip>/live
 Play Path/Stream Key: mystream
 ```
 
+## start docker containers 
+
+1 . RTMP 
+
+
+```
+ docker run -it  --name nginx-rtmp2 -p 1935:1935  bishoyabdo/nginx-rtmp:latest
+```
+
+2. HLS
+
+```
+ docker run -it  --name nginx-rtmp2 -p 1935:1935 -p 8080:8080 bishoyabdo/nginx-hls:latest
+```
 ## Watching the steam
 
 In your favorite RTMP video player connect to the stream using the URL:
@@ -57,3 +85,15 @@ http://&lt;your server ip&gt;/hls/mystream.m3u8
 ## Tested players
  * VLC
  * omxplayer (Raspberry Pi)
+
+## you can test by using 
+
+```
+git clone https://github.com/outcast/live-streaming-demo
+~/live-streaming-demo
+ffmpeg -re -i bbb_sunflower_1080p_60fps_normal.mp4 -vcodec copy -loop -1 -c:a aac -b:a 160k -ar 44100 -strict -2 -f flv http://57.79.252.84:8080/hls/bbb.m3u8
+```
+
+1. incase RTMP --> go to VLC --> network stream -->  rtmp://57.79.252.84/live/bbb
+
+2. Incase HLS --> go to VLC --> network stream -->  http://57.79.252.84:8080/hls/bbb.m3u8
