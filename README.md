@@ -62,7 +62,7 @@ Server: rtmp://<your server ip>/live
 Play Path/Stream Key: mystream
 ```
 
-## start docker containers 
+## Start docker containers 
 
 1 . RTMP 
 
